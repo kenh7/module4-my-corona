@@ -1,0 +1,24 @@
+:coffeescript
+  # MAIN FUNCTION (make sure to change your syntax highlighting to Coffeescript)
+  $ ->
+    alertify.set('notifier','position', 'top-left')
+    
+    $("#send-message button").click ()->
+      alertify.notify("SEND BUTTON CLICKED")
+    
+    
+/ HTML CODE
+#directory.ui.raised.text.container.segment
+  #echo-task
+    .ui.two.column.stackable.grid.container
+      .column
+        .ui.header INPUT
+        .ui.action.input#send-message
+          %input{type:"text", placeholder:"Your message"}
+          %button.ui.button.primary
+            Send
+      .column
+        .ui.header OUTPUT
+        #response
+          No response received.
+
