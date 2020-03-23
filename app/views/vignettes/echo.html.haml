@@ -1,12 +1,61 @@
 :coffeescript
+  #  GLOBALS
+  API_KEY = "AIzaSyDeDdH0j63ODYiXEwek3cNK0ilVdLA0IXg" 
+  # When you go to production, it is important to "hide" your API KEY. We won't since we are 
+  # just learning, but it is always good practice to add a flag and say REMOVE BEFORE PRODUCTION RUN
+  
+  GEOENCODING_API_PT = "https://maps.googleapis.com/maps/api/geocode/json"
+    
   # MAIN FUNCTION (make sure to change your syntax highlighting to Coffeescript)
   $ ->
+    # My API key has been restricted to just me. You'll need to add your own API KEY.
     alertify.set('notifier','position', 'top-left')
+    eventHandlers()
+  
+  eventHandlers = ()->
+    # UI POINTERS
+    inputField = $("#send-message input")
+    sendButton = $("#send-message button")
     
-    $("#send-message button").click ()->
-      alertify.notify("SEND BUTTON CLICKED")
-    
-    
+    sendButton.click (event)->
+      input_location = inputField.val()
+      # CLEAN USER SUPPLIED STRING, PREVENT ERROR
+      if input_location.trim().length == 0
+        alertify.notify("Whoops! Looks like you forgot to add a location (e.g., Arlington, Texas)")
+      else
+        api_call_geoencoding(input_location)
+      
+  # API CALL
+  # CALL THE GEOENCODING API
+  # SAMPLE GEOENCODING REQUEST
+  # https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
+  
+  # JQUERY AJAX (Asynchronous Javascript and XML)
+  # $.ajax({
+  #   method: "GET",
+  #   url: "test.js",
+  #   dataType: "script"
+  # });
+
+  api_call_geoencoding = (input_location)->
+    $.get
+      url: GEOENCODING_API_PT
+      dataType: "json"
+      data: 
+        address: input_location
+        key: API_KEY
+      success:  (data, textStatus, jqXHR)->
+        alertify.notify(data.results)
+        console.log "SUCCESS", data.results
+        
+        GPS = data.results[0].geometry.location
+        _.each GPS, (value, key)->
+          console.log key, value
+          $("[name='"+key+"']").val(value)
+        
+      error: (jqXHR, textStatus, errorThrown)->
+        alertify.error(textStatus)
+      
 / HTML CODE
 #directory.ui.raised.text.container.segment
   #echo-task
@@ -19,6 +68,14 @@
             Send
       .column
         .ui.header OUTPUT
-        #response
+        .response.panel
           No response received.
+          .ui.right.labeled.input
+            %label.ui.label LATITUDE
+            %input{type: "text", placeholder: "–", name: "lat"}
+          .ui.right.labeled.input
+            %label.ui.label LONGITUDE
+            %input{type: "text", placeholder: "–", name: "lng"}
+          %p#response  
+          
 

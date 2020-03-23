@@ -1,0 +1,26 @@
+/ SYMPTOM CHECKER FORM SKELETON
+.ui.centered.grid
+  .ten.wide.column
+    #symptom-checker.panel
+      %h1.ui.header.top.attached.blue Should I get tested?
+      .ui.segment.stacked.attached
+        / MAIN FORM
+        %form#assessment.ui.form
+          %p= BetterLorem.p(10, true)
+
+/ DO NOT MODIFY ANYTHING BELOW THESE LINES
+:coffeescript
+  $ ->
+    $('.dropdown').dropdown()
+    
+    $('form').submit (event) ->
+      console.log "SUBMIT!"
+      console.log $(this).serializeArray()
+      event.preventDefault()
+      return
+
+:scss
+  .panel{
+    margin-top: 60px;
+  }
+  
