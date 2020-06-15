@@ -11,23 +11,126 @@
     response1 = problem1(SYMPTOMS_STR_1)
     $('#response').html(response1)
     
-    problem2(SYMPTOMS_ARR_1)
+    problem2(SYMPTOMS_STR_2)
 
     problem3()
 
   problem1 = (symptoms_string)->
     console.log "PROBLEM1: STRING MANIPULATION"
-    # TODO
-    return "TODO"
+    
+    # Convert the input string - Separate symptoms in given string
+    symptomArray = symptoms_string.split ":"
+    
+    # Take first index of the array and split it,
+    #   this index does not have 'Symptoms:'
+    symptomArray = symptomArray[1].split ","
+    symptomArray = symptomArray.join()
+    symptomArray = symptomArray.split ","
+    
+    # Clean up - Remove trailing spaces from input
+    symptomArray = _.map(symptomArray, $.trim)
+    
+    # Normalize - all symptoms to lowercase
+    symptomArray = _.map(symptomArray, (item) ->
+      item.toLowerCase()
+    )
+    
+    # Filter - Take out bad input
+    symptomArray = _.filter(symptomArray, (item, index) ->
+      _.contains(COVID_SYMPTOMS, item)
+    )
+    
+    # Join - Combine input with a delimiter
+    symptomArray = symptomArray.join("; ")
+    
+    return symptomArray
     
   problem2 = (symptoms_arr)->
     console.log "PROBLEM2: PROGRAMMATIC DOM"
-    # TODO
-    return
     
+    
+    # Convert the input string - Separate symptoms in given string
+    symptomArray = symptoms_arr.split ":"
+    
+    # Take first index of the array and split it,
+    #   this index does not have 'Symptoms:'
+    symptomArray = symptomArray[1].split ","
+    symptomArray = symptomArray.join()
+    symptomArray = symptomArray.split ","
+    
+    # Clean up - Remove trailing spaces from input
+    symptomArray = _.map(symptomArray, $.trim)
+    
+    # Normalize - all symptoms to lowercase
+    symptomArray = _.map(symptomArray, (item) ->
+      item.toLowerCase()
+    )
+    
+    
+    # Create li elements for each input
+    _.each(symptomArray, (item) ->
+      
+      # See if the item is in the covid symptomss list
+      if _.contains(COVID_SYMPTOMS, item)
+        $("#problem-2 ol.ui.list.ordered.right").append("<li class = 'covid' >" + item + "</li>")
+      else
+        $("#problem-2 ol.ui.list.ordered.right").append("<li>" + item + "</li>")
+        
+    )
+    
+    $("#problem-2 ol.ui.list.ordered.left").closest('div').remove('.column')
+    
+    return
+  
+  # results of resolved locations arent in sync with covid locations  
   problem3 = ()->
-    API_KEY = "TODO" 
-    # TODO
+    API_KEY = "AIzaSyANFf1T3Y0JbNjfmUhsG-ANJUkCI1LmeJM"
+    
+    # Ajax call for /api/covid_locations
+    $.ajax
+      method: "GET"
+      url: "/api/covid_locations"
+      
+      success: (response) ->
+        console.log 'SUCCESS', response
+        
+        # Process data
+        _.each(response, (item) ->
+          itemArray = item.split ","
+          itemArray.pop()
+          itemString = itemArray.join(",")
+          
+          cleanCoord = itemString.replace('@', '')
+          formatCoord = "<li>" + cleanCoord + "</li>"
+          
+          $("#problem-3 ol.ui.list.ordered.left#covid-locations").append(formatCoord)
+          
+          resolveLoc(cleanCoord)
+          
+        )
+      error: (response) ->
+        alertify.error("There was a problem while retrieving the coordinates. Please try again.")
+        
+    # Use Reverse Geoencoding API
+    resolveLoc = (coord)->
+      $.ajax
+        method: "GET"
+        url: "https://maps.googleapis.com/maps/api/geocode/json"
+        data: 
+          latlng: coord
+          key: API_KEY
+        
+        success: (response) ->
+          resultLoc = response.results[0].formatted_address
+          formatAddress = "<li>" + resultLoc + "</li>"
+          
+          $("#problem-3 ol.ui.list.ordered.right#resolved-locations").append(formatAddress)
+          
+        error: (response) ->
+          alertify.error("There was a problem while retrieving the address. Please try again.")
+          
+      return
+    
     return
   
   
