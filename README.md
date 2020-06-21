@@ -14,9 +14,9 @@ Practice HTML, HAML, CSS semantic-ui framework, jQuery, underscore, AJAX ( jQuer
 ## Installation
 1) Create a new EC2 Cloud 9 instance
 2) In Cloud 9 terminal:
-	a) git clone https://github.com/kenh7/module4-my-corona.git
-	b) cd module4-my-corona
-	c) bundle install
+	- a) git clone https://github.com/kenh7/module4-my-corona.git
+	- b) cd module4-my-corona
+	- c) bundle install
 3) Run project
 
 ## Credits
