@@ -5,8 +5,11 @@ A two part class assignment building an attractive and usable form interface for
 Practice HTML, HAML, CSS semantic-ui framework, jQuery, underscore, AJAX ( jQuery $.ajax helper function )
 
 ## Demo / Images
-![alt text](demoImg/part1img.png)
-![alt text](demoImg/part2img.png)
+### Part 1 image below: Replicated a given UI provided a skeleton
+<img src="demoImg/part1img.png" width="400" alt="Demo image"/>
+
+### Part 2 image below: String manipulation, inserted data into a DOM list with jQuery, and retrieved and resolved GPS data from API call
+<img src="demoImg/part2img.png" width="400" alt="Demo image"/>
 
 ## Installation
 1) Create a new EC2 Cloud 9 instance
